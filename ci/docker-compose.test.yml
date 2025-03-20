@@ -1,0 +1,10 @@
+# Configuration for the Docker compose stack for the integration tests
+
+name: "hdd-lubes-integration-tests"
+services:
+  db:
+    image: postgres:16.2
+    environment:
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"

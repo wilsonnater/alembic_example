@@ -19,6 +19,7 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+# I am wondering if we can use the sqlalchemy orm for this?
 def upgrade() -> None:
     """Upgrade schema."""
     # Create the new related table
@@ -26,11 +27,29 @@ def upgrade() -> None:
         "job",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("name", sa.String(50), nullable=False),
-        sa.Column("description", sa.Text),
+        sa.Column("permission_level", sa.Integer),
     )
 
+    # Insert a default job
+    op.execute("INSERT INTO job (name, permission_level) VALUES ('Unknown Job', 0)")
+
+    # Get the ID of the newly inserted job
+    connection = op.get_bind()
+    result = connection.execute(
+        sa.text("SELECT id FROM job WHERE name = 'Unknown Job'")
+    )
+    default_id = result.scalar()
+
     # Add the foreign key constraint to the existing table
-    op.add_column("users", sa.Column("job_id", sa.Integer, sa.ForeignKey("job.id")))
+    op.add_column(
+        "users",
+        sa.Column(
+            "job_id",
+            sa.Integer,
+            sa.ForeignKey("job.id"),
+            server_default=sa.text(str(default_id)),
+        ),
+    )
 
 
 def downgrade() -> None:

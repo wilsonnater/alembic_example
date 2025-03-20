@@ -13,14 +13,15 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     age = Column(Integer)
-    job_id = Column(Integer, ForeignKey('job.id'))
+    job_id = Column(Integer, ForeignKey("job.id"))
     job = relationship("Job", back_populates="user")
 
     def __repr__(self):
         return f"<User(name='{self.name}', age={self.age})>"
 
+
 class Job(Base):
-    __tablename__ = 'job'
+    __tablename__ = "job"
 
     id = Column(Integer, primary_key=True)
     title = Column(String)

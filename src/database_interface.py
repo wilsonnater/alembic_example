@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker
 from database_model import Base, User
 
 
-
 def create_docker_postgresql_database_engine():
     """Create the postrgresql engine for the local docker postgresql.
 
@@ -28,6 +27,7 @@ def create_docker_postgresql_database_engine():
         f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{dbname}"
     )
 
+
 def create_database(engine: sqlalchemy.engine.base.Engine):
     """Create database tables.
 
@@ -39,7 +39,9 @@ def create_database(engine: sqlalchemy.engine.base.Engine):
     Base.metadata.create_all(engine)
 
 
-def delete_database(engine: sqlalchemy.engine.base.Engine, delete_database: bool = False):
+def delete_database(
+    engine: sqlalchemy.engine.base.Engine, delete_database: bool = False
+):
     """Delete database tables.
 
     Parameters
@@ -67,7 +69,7 @@ def add_test_data(engine):
     session = Session()
 
     # Insert data
-    user1 = User(name='Alice', age=30)
-    user2 = User(name='Bob', age=25)
+    user1 = User(name="Alice", age=30)
+    user2 = User(name="Bob", age=25)
     session.add_all([user1, user2])
     session.commit()
